@@ -1,0 +1,48 @@
+main section#keeb {
+    height: calc(40vh - 50px);
+    width: 90%;
+    max-width: 1220px;
+    margin: 1vh auto 1vh;
+    padding: 25px 0;
+    border-radius: 5px;
+}
+
+main section#keeb div.keebRow {
+    height: 6vh;
+    display: flex;
+    justify-content: center;
+}
+main section#keeb div.keebKey {
+    background-color: #eaeaea;
+    height: 95%;
+    margin: auto 2.5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+main section#keeb div.emptySpace {
+    height: 95%;
+    margin: auto 2.5px;
+}
+main section#keeb div.keebKey div.oneChar {
+    margin: 5px;
+    padding: 0 5px;
+    height: 80%; 
+    background-color: #ffffff;
+    font-size: calc(14px + .6vh);
+}
+main section#keeb div.keebKey div.twoChars {
+    margin: 5px;
+    height: 80%;
+    padding: 0 5px;
+    background-color: #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+main section#keeb div.keebKey div.shift, 
+main section#keeb div.keebKey div.main {
+    width: 100%;
+    padding: 0;
+    font-size: calc(10px + .6vh);
+}

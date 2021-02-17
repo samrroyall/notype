@@ -13,12 +13,13 @@ main section#keeb div.keebRow {
     justify-content: center;
 }
 main section#keeb div.keebKey {
-    background-color: #eaeaea;
+    background-color: var(--keyDark-color);
+    color: var(--text-color);
     height: 95%;
     margin: auto 2.5px;
-    border: 1px solid black;
+    border: 1px solid var(--dark-color);
     border-radius: 5px;
-    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
 }
 main section#keeb div.emptySpace {
     height: 95%;
@@ -28,21 +29,24 @@ main section#keeb div.keebKey div.oneChar {
     margin: 5px;
     padding: 0 5px;
     height: 80%; 
-    background-color: #ffffff;
-    font-size: calc(14px + .6vh);
+    background-color: var(--keyLight-color);
+    font-size: calc(10px + .6vh);
+    border-radius: 3px;
 }
 main section#keeb div.keebKey div.twoChars {
     margin: 5px;
     height: 80%;
     padding: 0 5px;
-    background-color: #ffffff;
+    background-color: var(--keyLight-color);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    border-radius: 3px;
 }
 main section#keeb div.keebKey div.shift, 
-main section#keeb div.keebKey div.main {
+main section#keeb div.keebKey div.main 
+{
     width: 100%;
     padding: 0;
-    font-size: calc(10px + .6vh);
+    font-size: calc(12px + .6vh);
 }

@@ -39,20 +39,15 @@ nav a.brand span.fullTitle { color: var(--dark-color); }
     color: var(--mid-color);
 }
 
-footer {
-    width: 90%;
-    margin: 0 auto;
-    color: #e99c9c;
-    color: #b87a7a;
-}
-
 @media only screen and (min-width: 1024px) {
     #noTest { display: none; }
 }
 @media only screen and (max-width: 1023.9px) {
-    #noTest, main section#keeb, footer { display: none; }
+    #noTest, main section#keeb, footer form#layoutForm { display: none; }
 }
 @media only screen and (max-width: 480px) {
     #noTest { display: block; }
-    main section#test, main section#keeb, footer { display: none; }
+    section#test { display: none; }
+    section#words, section#timerAndCounter,
+    form#layoutForm, form#modeForm { display: none; }
 }

@@ -1,52 +1,53 @@
-class NoTypeTest {
-    constructor() { 
-        // initialize stats object
-        this.started = false;
-        this.stats = {
-            chars: {
-                correct: 0,
-            },
-        };
-        // initialize action stack object
+class NoTypeTest { constructor(test_length) { 
+        this.started = false; // set test state to not started
+        // initialize timer
+        this.seconds = test_length;
+        $("section#timer span").text(this.seconds);
+        // itialize stats
+        this.chars_correct = 0;
+        this.storeCorrectChars();
+        // initialize stack for backspace
         this.undoStack = new Array();
         // set current word and character
-        $("div#wordWrapper div.word").first().addClass("current");
-        $("div#wordWrapper div.word.current div.letter").first().addClass("nextChar");
-        // open  
-        $(document).keyup( (e) => this.handler(e) );
+        $("#wordWrapper div.word").first().addClass("current");
+        $("#wordWrapper div.word.current div.letter").first().addClass("nextChar");
     }
 
-    handler(e) {
-        // start timer if not started
-        if (!this.started) {
-            this.started = true;
-            this.startTimer();
-        }
-        const key = e.code.toString().toLowerCase();
-        const nextChars = $("#wordWrapper div.letter.nextChar").first()
-        let nextChar, nextVal;
-        if (nextChars.length > 0) {
-            nextChar = nextChars.first()
-            nextVal = nextChar.html()
-        } else {
-            nextChar = null;
-            nextVal = "space";
-        }
-        if (nextVal === "space" && key === "space") {
-            this.nextWord(true);
-        } else if (key.length === 4 && key.substring(3,4) === nextVal) {
-            this.nextLetter(nextChar, true);
-        } else if (key === "backspace") {
-            this.handleBackspace(nextChar);
-        } else if (nextChar === null) {
-            // if non-space is used between words, mark
-            // character as incorrect and move to next word
-            this.nextWord(false);
-        } else {
-            this.nextLetter(nextChar, false);
-        }
+    startTimer() {
+        const test_length = this.seconds;
+        let seconds = test_length;
+        let timerFunc = (s) => $("section#timer span").text(s);
+        let timer = setInterval(
+            function () {
+                seconds--;
+                timerFunc(seconds);
+                if (seconds === 0) clearInterval(timer);
+            }, 1000
+        );
     }
 
+    startCounter() {
+        const test_length = this.seconds;
+        let seconds = 0;
+        let counterFunc = function (s) {
+            const correct = parseInt($(":root")[0].style.getPropertyValue("--chars-correct"));
+            $("section#counter span").text(`${Math.round(12*correct/s)} WPM`);
+        };
+        let counter = setInterval(
+            function () {
+                seconds++;
+                counterFunc(seconds);
+                if (seconds === test_length) clearInterval(counter);
+            }, 1000
+        );
+    }
+
+    startTest() {
+        this.started = true;
+        this.startTimer()
+        this.startCounter()
+    }
+    
     handleBackspace(nextChar) {
         if (this.undoStack.length > 0) {
             // backspace can only serve to undo a previous
@@ -58,24 +59,16 @@ class NoTypeTest {
         }
     }    
 
-    startTimer() {
-        let seconds = parseInt($("#timer span").html()); // temporary
-        let timer = setInterval(
-            function () {
-                seconds--;
-                $("#timer span").html(seconds.toString());
-                if (seconds === 0) {
-                    clearInterval(timer);
-                }
-            }, 1000
-        );
+    storeCorrectChars() {
+        $(":root")[0].style.setProperty("--chars-correct", this.chars_correct);
     }
 
     nextLetter(nextChar, correct) {
         // push undo function to stack
         this.undoStack.push(this.prevLetter);
         // give current letter the `correct` or `incorrect` class as needed
-        this.stats.chars.correct += correct;
+        this.chars_correct += correct;
+        this.storeCorrectChars();
         if (correct) nextChar.addClass("correct");
         else nextChar.addClass("incorrect");
         // pass `nextChar` class to next letter in current word if one exists
@@ -90,7 +83,6 @@ class NoTypeTest {
 
     // undoes the work of `nextLetter`
     prevLetter() {
-        console.log("running prevLetter");
         const nextChars = $("#wordWrapper div.letter.nextChar");
         if (nextChars.length == 0) {
             // pass toggle `beforeNextChar` and `nextChar`
@@ -119,7 +111,8 @@ class NoTypeTest {
     nextWord(correct) {
         // push undo function to stack
         this.undoStack.push(this.prevWord);
-        this.stats.chars.correct += correct;
+        this.chars_correct += correct;
+        this.storeCorrectChars();
         // remove `beforeNextChar` class
         $("#wordWrapper div.letter.beforeNextChar").first().removeClass("beforeNextChar");
         // pass `current` class from current word to next word 
@@ -135,7 +128,6 @@ class NoTypeTest {
 
     // undoes the word of `nextWord`
     prevWord() {
-        console.log("running prevWord");
         const currWord = $("#wordWrapper div.word.current").first();
         // get previous word
         const prevWords = currWord.prevAll("div.word");
@@ -151,6 +143,35 @@ class NoTypeTest {
         }
         prevWord.children("div.letter").last().addClass("beforeNextChar");
     }
+
+    keyHandler(e) {
+        // start timer if not already started
+        if (!this.started) this.startTest();
+        // handle keystroke
+        const key = e.code.toString().toLowerCase();
+        const nextChars = $("#wordWrapper div.letter.nextChar").first()
+        let nextChar, nextVal;
+        if (nextChars.length > 0) {
+            nextChar = nextChars.first()
+            nextVal = nextChar.html()
+        } else {
+            nextChar = null;
+            nextVal = "space";
+        }
+        if (nextVal === "space" && key === "space") {
+            this.nextWord(true);
+        } else if (key.length === 4 && key.substring(3,4) === nextVal) {
+            this.nextLetter(nextChar, true);
+        } else if (key === "backspace") {
+            this.handleBackspace(nextChar);
+        } else if (nextChar === null) {
+            // if non-space is used between words, mark
+            // character as incorrect and move to next word
+            this.nextWord(false);
+        } else {
+            this.nextLetter(nextChar, false);
+        }
+    }
 }
 
 $(document).ready( function() {
@@ -165,7 +186,9 @@ $(document).ready( function() {
         $("section#timerAndCounter section#timer").css("display", "flex");
         
         let test = new NoTypeTest(
-            // options in here
+            test_length = 30
         );
+        // open keyup listener, send all keystrokes to handler
+        $(document).keyup( (e) => test.keyHandler(e) );
     });
 });

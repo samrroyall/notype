@@ -36,16 +36,18 @@ nav a.brand span.fullTitle { color: var(--dark-color); }
 
 #noTest {
     margin: 20vh auto;
-    padding-left: 10%;
     width: 85%;
+    text-align: center;
     color: var(--mid-color);
 }
 
 @media only screen and (min-width: 1024px) {
     #noTest { display: none; }
+    #test { display: flex; }
 }
 @media only screen and (max-width: 1023.9px) {
     #noTest, main section#keeb, footer form#layoutForm { display: none; }
+    #test { display: flex; } 
 }
 @media only screen and (max-width: 480px) {
     #noTest { display: block; }

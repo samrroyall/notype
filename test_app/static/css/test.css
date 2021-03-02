@@ -3,7 +3,6 @@ section#test {
     width: 90%;
     min-width: 750px;
     margin: 2vh auto 1vh;
-    display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-color);

@@ -16,6 +16,8 @@ modes = {
     "dark": "Dark",
 }
 
+sample_text = 4*["lorem","ipsum","dolor","sit","amet","consectetur","adipisicing","elit","repellat","nemo","blanditiis","ipsa","reiciendis","molestias","totam","pariatur","minus","cumque","maiores","eveniet","voluptas","recusandae","dignissimos","sequi","atque","voluptatum","ad","ipsam","consequuntur","officiis"]
+
 # Create your views here.
 def index(request):
     if "current_layout" not in request.session:
@@ -30,8 +32,8 @@ def index(request):
         "current_layout": request.session.get("current_layout"),
         "modes": sorted(list(modes.items()), key=lambda x : x[0]),
         "current_mode": request.session.get("current_mode"),
+        "word_list": sample_text,
     }
-
     return render(request, "index.html", context)
 
 def change_layout(request):

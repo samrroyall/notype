@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{% static 'css/keeb.css' %}">
     <!-- Self-defined JS -->
     <script src="{% static 'js/keeb.js' %}"></script>
+    <script src="{% static 'js/test.js' %}"></script>
     <script>
         $(document).ready( function() {
             setLayout("{{ current_layout.0 }}");
@@ -36,16 +37,23 @@
         <section id="test">
             <section id="words">
                 <div id="startTestPrompt"><span>Click here to start test...</span></div>
-                <p>
-                    lorem ipsum dolor sit amet consectetur adipisicing elit. repellat nemo blanditiis ipsa, reiciendis, molestias totam pariatur minus cumque maiores eveniet voluptas recusandae dignissimos sequi atque voluptatum ad ipsam consequuntur officiis.
-                    lorem ipsum dolor sit amet consectetur adipisicing elit. repellat nemo blanditiis ipsa, reiciendis, molestias totam pariatur minus cumque maiores eveniet voluptas recusandae dignissimos sequi atque voluptatum ad ipsam consequuntur officiis.
-                    lorem ipsum dolor sit amet consectetur adipisicing elit. repellat nemo blanditiis ipsa, reiciendis, molestias totam pariatur minus cumque maiores eveniet voluptas recusandae dignissimos sequi atque voluptatum ad ipsam consequuntur officiis.
-                    lorem ipsum dolor sit amet consectetur adipisicing elit. repellat nemo blanditiis ipsa, reiciendis, molestias totam pariatur minus cumque maiores eveniet voluptas recusandae dignissimos sequi atque voluptatum ad ipsam consequuntur officiis.
-                </p>
+                <div id="wordWrapper">
+                {% for word in word_list %}
+                    <div class="word">
+                    {% for letter in word %}
+                    <div class="letter">{{letter}}</div>
+                    {% endfor %}
+                    </div>
+                {% endfor %}
+                </div>
             </section>
             <section id="timerAndCounter">
-                <section id="timer"><span>23</span></section>
-                <section id="counter"><span>103 WPM</span></section>
+                <section id="timer">
+                    <span>30</span>
+                </section>
+                <section id="counter">
+                    <span>??? WPM</span>
+                </section>
             </section>
         </section>
         <section id="keeb"></section>

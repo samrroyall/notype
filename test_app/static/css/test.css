@@ -2,7 +2,7 @@ section#test {
     height: 45vh;
     width: 90%;
     min-width: 750px;
-    margin: 2vh auto 1vh;
+    margin: 6vh auto 0;
     align-items: center;
     justify-content: center;
     color: var(--text-color);

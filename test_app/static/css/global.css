@@ -22,17 +22,39 @@ select {
 body { background-color: var(--bg-color); }
 
 nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - 40px);
+    padding: 1vh 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
-    padding: 1vh 20px;
     background-color: var(--light-color);
     z-index: 1000;
-}
-nav a.brand {
-    color: var(--brand-color);
     font-size: calc(24px + 1vw);
 }
+nav a.brand { color: var(--brand-color); }
 nav a.brand span.fullTitle { color: var(--dark-color); }
+nav i#navMenu { 
+    color: var(--brand-color); 
+    cursor: pointer;
+}
+nav i#navMenu:hover { color: var(--dark-color); }
+
+section#userPane {
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 0%;
+    height: 100vh;
+    padding: 6vh 0 0;
+    background-color: var(--dark-color);
+    font-size: calc(8px + 0.6vw);
+    z-index: 900;
+}
 
 #noTest {
     margin: 20vh auto;
@@ -49,8 +71,8 @@ nav a.brand span.fullTitle { color: var(--dark-color); }
     #noTest, main section#keeb, footer form#layoutForm { display: none; }
     #test { display: flex; } 
 }
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 750px) {
     #noTest { display: block; }
-    section#test, section#words, section#timerAndCounter,
+    nav i#navMenu, section#userPane, section#test, section#words, section#timerAndCounter,
     form#layoutForm, form#modeForm { display: none; }
 }

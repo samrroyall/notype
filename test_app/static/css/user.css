@@ -23,8 +23,6 @@ div#userPage select {
     border-radius: 5px;
 }
 
-
-
 div#userPage option {
     font-family: 'Roboto Mono', monospace;
 }
@@ -49,18 +47,18 @@ div#userPage label.sublabel {
     display: inline-block;
     margin: 0 5px;
 }
-div#userPage label.sublabel a { 
+div#userPage a { 
     color: var(--keyDark-color);
     font-family: 'Roboto Mono', monospace;
     font-weight: bold;
     text-decoration: underline;
 }
-div#userPage label.sublabel a:hover { 
-    color: var(--keyPressLight-color);
-}
+div#userPage a:hover { color: var(--keyPressLight-color); }
 /* links adjacent to selected radios should be a different color */
 div#userPage input[type='radio']:checked+a { 
     color: var(--keyPressLight-color);
     text-decoration: none;
     cursor: default;
 }
+
+div#userPage a#logoutLink { margin-top: 40px; }

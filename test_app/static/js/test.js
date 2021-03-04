@@ -1,44 +1,53 @@
-// class TimeTracker {
-//     constructor(selector, start, end, step=1000) {
-//         this.selector = selector;
-//         this.start = start;
-//         this.end = end;
-//         this.step = step;
-//     }
-// 
-//     start() {
-//         const iterator = (
-//             this.start < this.end
-//             ? (i)  => i+1
-//             : (i) => i-1 
-//         );
-//         const selector = this.selector;
-//         const end = this.end;
-//         let i = this.start;
-//         let timer = setInterval( function () {
-//             i = iterator(i);
-//             $(selector).text(i);
-//             if (i === end) {
-//                 clearInterval(timer);
-//             }
-//         }, this.step);
-//     }
-// }
-
 class NoTypeTest { 
     constructor(test_length) { 
         this.started = false; // set test state to not started
+
         // initialize timer
         this.test_length = test_length;
         $("section#timer span").text(this.test_length);
+
         // itialize stats
         this.chars_correct = 0;
-        this.storeCorrectChars();
+        this.chars_incorrect = 0;
+        this.stats_obj = {
+            // second: [chars_correct, chars_incorrect, wpm]
+        }
+        this.final_score = undefined;
+
         // initialize stack for backspace
         this.undoStack = new Array();
-        // set current word and character
+
+        // set first word and character
         $("#wordWrapper div.word").first().addClass("current");
         $("#wordWrapper div.word.current div.letter").first().addClass("nextChar");
+    }
+
+    endTest(e) {
+        this.final_score = this.stats_obj[this.test_length][2];
+        console.log(`Test is over! Here is your final WPM: ${this.final_score}.`);
+        // send ajax request to DB
+        const token = $("section#test input[name='csrfmiddlewaretoken']").first().val();
+        $.ajax({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", token);
+                }
+            },
+            method: "POST",
+            url: "/change_user_settings",
+            data: {"name": name, "value": value},
+            dataType: 'json',
+            success: function (e) {
+                location.reload();
+            },
+            error: function (e) {
+                console.log(e);
+                alert("The previous request resulted in an error.");
+                return;
+            },
+        });
+        // display graph to user 
+
     }
 
     startTimer() {
@@ -52,23 +61,35 @@ class NoTypeTest {
     }
 
     startCounter() {
-        const counterFunc = function (s) {
-            const correct = parseInt($(":root")[0].style.getPropertyValue("--chars-correct"));
-            $("section#counter span").text(`${12*correct/s} WPM`);
-        };
         const test_length = this.test_length;
+        const calculateWPM = (s) => Math.round(12*this.chars_correct/s);
+        const writeWPM = (wpm) => $("section#counter span").text(`${wpm} WPM`);
+        const updateStats = (s, wpm) => (
+            this.stats_obj[s] = [
+                this.chars_correct,
+                this.chars_incorrect,
+                wpm
+            ]
+        );
+        const endFunc = () => $("section#test input#testState").val("ended").trigger("change");
         let i = 0;
         let counter = setInterval( function () {
             i++;
-            counterFunc(i);
-            if (i === test_length) clearInterval(counter);
+            const wpm = calculateWPM(i);
+            writeWPM(wpm);
+            updateStats(i, wpm);
+            if (i === test_length) {
+                clearInterval(counter);
+                endFunc();
+            }
         }, 1000);
     }
 
     startTest() {
-        this.started = true;
-        this.startTimer()
-        this.startCounter()
+        $("section#test input#testState").val("started");
+        $("section#test input#testState").change( (e) => this.endTest(e) );
+        this.startTimer();
+        this.startCounter();
     }
     
     handleBackspace(nextChar) {
@@ -82,16 +103,13 @@ class NoTypeTest {
         }
     }    
 
-    storeCorrectChars() {
-        $(":root")[0].style.setProperty("--chars-correct", this.chars_correct);
-    }
-
     nextLetter(nextChar, correct) {
         // push undo function to stack
         this.undoStack.push(this.prevLetter);
-        // give current letter the `correct` or `incorrect` class as needed
+        // store current number of correct and incorrect chars
         this.chars_correct += correct;
-        this.storeCorrectChars();
+        this.chars_incorrect += !correct;
+        // give current letter the `correct` or `incorrect` class as needed
         if (correct) nextChar.addClass("correct");
         else nextChar.addClass("incorrect");
         // pass `nextChar` class to next letter in current word if one exists
@@ -134,8 +152,9 @@ class NoTypeTest {
     nextWord(correct) {
         // push undo function to stack
         this.undoStack.push(this.prevWord);
+        // store current number of correct and incorrect chars
         this.chars_correct += correct;
-        this.storeCorrectChars();
+        this.chars_incorrect += !correct;
         // remove `beforeNextChar` class
         $("#wordWrapper div.letter.beforeNextChar").first().removeClass("beforeNextChar");
         // pass `current` class from current word to next word 
@@ -169,7 +188,8 @@ class NoTypeTest {
 
     keyHandler(e) {
         // start timer if not already started
-        if (!this.started) this.startTest();
+        const test_state = $("section#test input#testState").val();
+        if (test_state == "not-started") this.startTest();
         // handle keystroke
         const key = e.code.toString().toLowerCase();
         const nextChars = $("#wordWrapper div.letter.nextChar").first()
@@ -196,3 +216,26 @@ class NoTypeTest {
         }
     }
 }
+
+$(document).ready( function() {
+    // instantiate test object when test prompt is clicked
+    $("section#words").click( function () {
+        // hide test prompt
+        $("section#words div#startTestPrompt").hide();
+        // increase test opacity to 100% 
+        $("section#words div#wordWrapper").css("opacity", "1");
+        // ease-in timer and counter 
+        $("section#timerAndCounter").animate(
+            {"width": "15%"}, 500
+        );
+        $("section#test").css("justify-content", "space-evenly");
+        $("section#timerAndCounter section#counter").css("display", "flex");
+        $("section#timerAndCounter section#timer").css("display", "flex");
+        // instantiate new test with user test duration
+        let test = new NoTypeTest(
+            test_length = parseInt($("section#test input#testLength").val())
+        );
+        // open keyup listener, send all keystrokes to handler
+        $(document).keyup( (e) => test.keyHandler(e) );
+    });
+});

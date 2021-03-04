@@ -1,3 +1,17 @@
+div#loginErrors, div#registerErrors { 
+    width: 70%;
+    margin: 10px auto;
+    color: red;
+}
+
+div#loginErrors ul, div#registerErrors ul { 
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 div#loginRegistrationPicker {
     width: 70%;
     margin: 50px auto;

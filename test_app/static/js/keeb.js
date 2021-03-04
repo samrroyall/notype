@@ -113,19 +113,8 @@ function setLayout(layout) {
 }
 
 const modeColors = {
-    light: {
-        bg: "#ffffff",
-        light: "#eaeaea",
-        mid: "lightgrey",
-        dark: "grey",
-        brand: "black",
-        text: "grey",
-        keyLight: "#ffffff",
-        keyDark: "#eaeaea",
-        keyPressLight: "#e99c9c",
-        keyPressDark: "#b87a7a",
-    },
-    dark: {
+    // dark mode
+    1: {
         bg: "rgb(41, 38, 38)",
         light: "grey",
         mid: "#eaeaea",
@@ -137,6 +126,19 @@ const modeColors = {
         keyPressLight: "#854f4f",
         keyPressDark: "#5a3636",
     },
+    // light mode
+    2: {
+        bg: "#ffffff",
+        light: "#eaeaea",
+        mid: "lightgrey",
+        dark: "rgb(102, 97, 97)",
+        brand: "black",
+        text: "grey",
+        keyLight: "#ffffff",
+        keyDark: "#eaeaea",
+        keyPressLight: "#e99c9c",
+        keyPressDark: "#b87a7a",
+    },
 }
 
 function changeMode(mode) {
@@ -144,7 +146,10 @@ function changeMode(mode) {
         let currMode = $(":root")[0].style.getPropertyValue("--mode");
         if (currMode === mode) return;
     }
-    if (!modeColors.hasOwnProperty(mode)) return;
+    if (!modeColors.hasOwnProperty(mode)) {
+        console.log(`mode ${mode} does not exist`)
+        return;
+    }
     $(":root")[0].style.setProperty("--mode", mode);
     $(":root")[0].style.setProperty("--bg-color", modeColors[mode].bg);
     $(":root")[0].style.setProperty("--light-color", modeColors[mode].light);
@@ -210,7 +215,19 @@ $(document).ready( function () {
     $("#modePicker").change( function () {
         $("#modeForm").submit();
     });
-    $(document).keydown( (e) => pressKey(e) );
-    $(document).keyup( (e) => unPressKey(e) );
+    $(document).keydown( function (e) {
+        try {
+            pressKey(e);
+        } catch (err) {
+            return;
+        }
+    });
+    $(document).keyup( function (e) {
+        try {
+            unPressKey(e);
+        } catch (err) {
+            return;
+        }
+    });
 
 });

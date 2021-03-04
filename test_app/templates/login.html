@@ -1,42 +1,51 @@
-<div id="loginRegistrationPicker">
-    <span id="loginPicker">Login</span>
-    <span id="registrationPicker">Register</span>
+<div id="loginPage">
+    <div id="loginRegistrationPicker">
+        <span id="loginPicker">Login</span>
+        <span id="registrationPicker">Register</span>
+    </div>
+
+
+    <form id="loginForm" method="POST">
+        {% include 'messages.html' with div_id="loginErrors" %}
+
+        {% csrf_token %}    
+        <label for="emailInput">
+            <span>Email</span>
+            <input type="text" name="email" id="emailInput">
+        </label><br/>
+        <label for="passwordInput">
+            <span>Password</span>
+            <input type="password" name="password" id="passwordInput">
+        </label><br/>
+
+        <label for="submitInput">
+            <input type="submit" id="submitInput" value="Login">
+        </label>
+    </form>
+
+    <form id="registerForm" method="POST">
+        {% include 'messages.html' with div_id="registerErrors" %}
+
+        {% csrf_token %}    
+        <label for="emailInput2">
+            <span>Email</span>
+            <input type="text" name="email" id="emailInput2">
+        </label><br/>
+        <label for="usernameInput">
+            <span>Username</span>
+            <input type="text" name="username" id="usernameInput">
+        </label><br/>
+        <label for="passwordInput2">
+            <span>Password</span>
+            <input type="password" name="password" id="passwordInput2">
+        </label><br/>
+        <label for="verifyPasswordInput">
+            <span>Verify Password</span>
+            <input type="password" name="verify_password" id="verifyPasswordInput">
+        </label><br/>
+
+        <label for="submitInput2">
+            <input type="submit" id="submitInput2" value="Register">
+        </label>
+    </form>
 </div>
-<div id="loginErrors">
-</div>
-<form action="/login" method="post" id="loginForm">
-    {% csrf_token %}    
-    <label for="emailInput">
-        <span>Email</span>
-        <input type="text" name="email" id="emailInput">
-    </label><br/>
-    <label for="passwordInput">
-        <span>Password</span>
-        <input type="password" name="password" id="passwordInput">
-    </label><br/>
-    <label for="submitInput">
-        <input type="submit" id="submitInput" value="Login">
-    </label>
-</form>
-<form action="/register" method="post" id="registrationForm">
-    {% csrf_token %}    
-    <label for="emailInput2">
-        <span>Email</span>
-        <input type="text" name="email" id="emailInput2">
-    </label><br/>
-    <label for="usernameInput">
-        <span>Username</span>
-        <input type="text" name="username" id="usernameInput">
-    </label><br/>
-    <label for="passwordInput2">
-        <span>Password</span>
-        <input type="password" name="password" id="passwordInput2">
-    </label><br/>
-    <label for="verifyPasswordInput">
-        <span>Verify Password</span>
-        <input type="password" name="verifyPassword" id="verifyPasswordInput">
-    </label><br/>
-    <label for="submitInput2">
-        <input type="submit" id="submitInput2" value="Register">
-    </label>
-</form>

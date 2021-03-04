@@ -1,0 +1,87 @@
+<div id="userPage">
+    <h1>Hello, {{ user.username }}!</h1>
+
+    <div id="settingsForm">
+        {% csrf_token %}
+        <label class="settingLabel">
+            <span>Test Type</span>
+            <div class="radioOptions">
+                {% for test_type in preferences.test_types %}
+                <label class="sublabel" for="test_type{{test_type.0}}Input">
+                    <input type="radio" name="test_type" value="{{test_type.0}}" id="test_type{{test_type.0}}Input"
+                        {% if test_type.0 == user.test_type %}
+                            checked
+                        {% endif %}
+                    >
+                    <a href="#" id="test_type{{test_type.0}}Input">{{test_type.1}}</a>
+                </label>
+                {% endfor %}
+
+            </div>
+        </label>
+        <label class="settingLabel">
+            <span>Test Duration (seconds)</span>
+            <div class="radioOptions">
+                {% for duration in preferences.durations %}
+                <label class="sublabel" for="duration{{duration.0}}Input">
+                    <input type="radio" name="duration" value="{{duration.0}}" id="duration{{duration.0}}Input"
+                        {% if duration.0 == user.duration %}
+                            checked
+                        {% endif %}
+                    >
+                    <a href="#" id="duration{{duration.0}}Label">{{duration.1}}</a>
+                </label>
+                {% endfor %}
+
+            </div>
+        </label>
+        <label class="settingLabel">
+            <span>Test Difficulty</span>
+            <div class="radioOptions">
+                {% for difficulty in preferences.difficulties %}
+                <label class="sublabel" for="difficulty{{difficulty.0}}Input">
+                    <input type="radio" name="difficulty" value="{{difficulty.0}}" id="difficulty{{difficulty.0}}Input"
+                        {% if difficulty.0 == user.difficulty %}
+                            checked
+                        {% endif %}
+                    >
+                    <a href="#" id="difficulty{{difficulty.0}}Label">{{difficulty.1}}</a>
+                </label>
+                {% endfor %}
+            </div>
+        </label>
+        <!-- Layout Picker -->
+        <label class="settingLabel" for="layoutPicker">
+            <span>Keyboard Layout</span>
+            <div class="selectOptions">
+                <select name="layout" id="layoutPicker">
+                        <option value="{{ user.layout }}">
+                            {{ user.get_layout_display }}
+                        </option>
+                        {% for layout in preferences.layouts %}
+                            {% if layout.0 != user.layout %}
+                                <option value="{{ layout.0 }}">{{ layout.1 }}</option>
+                            {% endif %}
+                        {% endfor %}
+                </select>
+            </div>
+        </label>
+        <!-- Mode Picker -->
+        <label class="settingLabel">
+            <span>Mode</span>
+            <div class="radioOptions">
+                {% for mode in preferences.modes %}
+                <label class="sublabel" for="mode{{mode.0}}Input">
+                    <input type="radio" name="mode" value="{{mode.0}}" id="mode{{mode.0}}Input"
+                        {% if mode.0 == user.mode %}
+                            checked
+                        {% endif %}
+                    >
+                    <a href="#" id="mode{{mode.0}}Label">{{mode.1}}</a>
+                </label>
+                {% endfor %}
+            </div>
+        </label>
+    </div>
+
+</div>

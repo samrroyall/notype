@@ -16,7 +16,7 @@ section#words {
 
 div#startTestPrompt {
     position: absolute;
-    top: calc(10vh + 8px); 
+    top: calc(8vh + 8px); 
     left: 14%;
     height: 50px;
     width: 72%;

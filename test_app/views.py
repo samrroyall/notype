@@ -1,49 +1,74 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from login_app.models import User
+from .wordlists import get_new_test
 
-layouts = { 
-    "80": "TKL",
-    "80-wkl": "WKL",
-    "75": "75%",
-    "75-wkl": "75% WKL",
-    "65": "65%",
-    "65-wkl": "65% WKL",
-    "60": "60%",
-    "60-wkl": "60% WKL",
-    "60-hhkb": "HHKB",
-}
-modes = {
-    "light": "Light", 
-    "dark": "Dark",
-}
+def get_user(sessionData):
+    if "userid" not in sessionData:
+        return None
+    user_objs = User.objects.filter(email=sessionData.get("userid"))
+    if len(user_objs) != 1:
+        raise Exception("error: test_app.views.get_user: more than one user matches supplied email.")
+    return user_objs[0]
 
-sample_text = 4*["lorem","ipsum","dolor","sit","amet","consectetur","adipisicing","elit","repellat","nemo","blanditiis","ipsa","reiciendis","molestias","totam","pariatur","minus","cumque","maiores","eveniet","voluptas","recusandae","dignissimos","sequi","atque","voluptatum","ad","ipsam","consequuntur","officiis"]
+# ROUTES
 
-# Create your views here.
 def index(request):
-    if "current_layout" not in request.session:
-        assert "60-hhkb" in layouts, "default layout is not in `layouts` dictionary"
-        request.session["current_layout"] = ("60-hhkb", layouts.get("60-hhkb"))
-    if "current_mode" not in request.session:
-        assert "dark" in modes, "default mode is not in `modes` dictionary"
-        request.session["current_mode"] = ("dark", modes.get("dark"))
+    return redirect("/test");
 
+def test(request):
+    # set default keyboard layout and color mode
+    current_user = get_user(request.session)
     context = {
-        "layouts": sorted(list(layouts.items()), key=lambda x : x[1]),
-        "current_layout": request.session.get("current_layout"),
-        "modes": sorted(list(modes.items()), key=lambda x : x[0]),
-        "current_mode": request.session.get("current_mode"),
-        "word_list": sample_text,
+        "auth_type": request.session.get("auth_type") if "auth_type" in request.session else None,
+        "preferences": {
+            "layouts": User.LAYOUTS,
+            "default_layout": User.DEFAULT_LAYOUT,
+            "modes": User.MODES,
+            "default_mode": User.DEFAULT_MODE,
+            "difficulties": User.DIFFICULTIES,
+            "durations": User.DURATIONS,
+            "default_duration": User.DEFAULT_DURATION,
+            "test_types": User.TEST_TYPES,
+        },
+        "user": current_user,
+        "word_list": (
+            get_new_test( int(current_user.duration/60*500), current_user.difficulty )
+            if current_user is not None 
+            else get_new_test( int(User.DEFAULT_DURATION/60*500), User.DEFAULT_DIFFICULTY )
+        ),
     }
     return render(request, "index.html", context)
 
-def change_layout(request):
-    new_layout = request.POST.get("layout")
-    assert new_layout in layouts, f"new layout '{new_layout}' is not in `layouts` dictionary"
-    request.session["current_layout"] = (new_layout, layouts.get(new_layout))
-    return redirect("/")
-
-def change_mode(request):
-    new_mode = request.POST.get("mode")
-    assert new_mode in modes, f"new mode '{new_mode}' is not in `modes` dictionary"
-    request.session["current_mode"] = (new_mode, modes.get(new_mode)) 
-    return redirect("/")
+def change_user_settings(request):
+    if request.method != "POST" or not request.is_ajax():
+        return redirect("/")
+    current_user = get_user(request.session)
+    name = request.POST.get("name")
+    value = request.POST.get("value")
+    print(f"name: {name}, value: {value}")
+    success = False
+    if name == "duration":
+        if int(value) in [choice[0] for choice in User.DURATIONS]:
+            current_user.duration = int(value)
+            success = True
+    elif name == "difficulty":
+        if int(value) in [choice[0] for choice in User.DIFFICULTIES]:
+            current_user.difficulty = int(value)
+            success = True
+    elif name == "layout":
+        if value in [choice[0] for choice in User.LAYOUTS]:
+            current_user.layout = value
+            success = True
+    elif name == "mode":
+        if int(value) in [choice[0] for choice in User.MODES]:
+            current_user.mode = int(value)
+            success = True
+    elif name == "test_type":
+        if int(value) in [choice[0] for choice in User.TEST_TYPES]:
+            current_user.test_type = int(value)
+            success = True
+    if not success:
+        return JsonResponse({"message": "Invalid form name or value"}, status=400)
+    current_user.save()
+    return JsonResponse({}, status=200)

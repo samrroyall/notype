@@ -1,8 +1,36 @@
-class NoTypeTest { constructor(test_length) { 
+// class TimeTracker {
+//     constructor(selector, start, end, step=1000) {
+//         this.selector = selector;
+//         this.start = start;
+//         this.end = end;
+//         this.step = step;
+//     }
+// 
+//     start() {
+//         const iterator = (
+//             this.start < this.end
+//             ? (i)  => i+1
+//             : (i) => i-1 
+//         );
+//         const selector = this.selector;
+//         const end = this.end;
+//         let i = this.start;
+//         let timer = setInterval( function () {
+//             i = iterator(i);
+//             $(selector).text(i);
+//             if (i === end) {
+//                 clearInterval(timer);
+//             }
+//         }, this.step);
+//     }
+// }
+
+class NoTypeTest { 
+    constructor(test_length) { 
         this.started = false; // set test state to not started
         // initialize timer
-        this.seconds = test_length;
-        $("section#timer span").text(this.seconds);
+        this.test_length = test_length;
+        $("section#timer span").text(this.test_length);
         // itialize stats
         this.chars_correct = 0;
         this.storeCorrectChars();
@@ -14,32 +42,27 @@ class NoTypeTest { constructor(test_length) {
     }
 
     startTimer() {
-        const test_length = this.seconds;
-        let seconds = test_length;
-        let timerFunc = (s) => $("section#timer span").text(s);
-        let timer = setInterval(
-            function () {
-                seconds--;
-                timerFunc(seconds);
-                if (seconds === 0) clearInterval(timer);
-            }, 1000
-        );
+        const updatePage = (s) => $("section#timer span").text(s);
+        let i = this.test_length;
+        let timer = setInterval( function () {
+            i--;
+            updatePage(i);
+            if (i === 0) clearInterval(timer);
+        }, 1000);
     }
 
     startCounter() {
-        const test_length = this.seconds;
-        let seconds = 0;
-        let counterFunc = function (s) {
+        const counterFunc = function (s) {
             const correct = parseInt($(":root")[0].style.getPropertyValue("--chars-correct"));
-            $("section#counter span").text(`${Math.round(12*correct/s)} WPM`);
+            $("section#counter span").text(`${12*correct/s} WPM`);
         };
-        let counter = setInterval(
-            function () {
-                seconds++;
-                counterFunc(seconds);
-                if (seconds === test_length) clearInterval(counter);
-            }, 1000
-        );
+        const test_length = this.test_length;
+        let i = 0;
+        let counter = setInterval( function () {
+            i++;
+            counterFunc(i);
+            if (i === test_length) clearInterval(counter);
+        }, 1000);
     }
 
     startTest() {
@@ -173,22 +196,3 @@ class NoTypeTest { constructor(test_length) {
         }
     }
 }
-
-$(document).ready( function() {
-    $("section#words").click( function () {
-        $("section#words div#startTestPrompt").hide();
-        $("section#words div#wordWrapper").css("opacity", "1");
-        $("section#timerAndCounter").animate(
-            {"width": "15%"}, 500
-        );
-        $("section#test").css("justify-content", "space-evenly");
-        $("section#timerAndCounter section#counter").css("display", "flex");
-        $("section#timerAndCounter section#timer").css("display", "flex");
-        
-        let test = new NoTypeTest(
-            test_length = 30
-        );
-        // open keyup listener, send all keystrokes to handler
-        $(document).keyup( (e) => test.keyHandler(e) );
-    });
-});

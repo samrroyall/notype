@@ -27,11 +27,39 @@
 </head>
 <body>
     <nav>
-        <a class="brand" href="/">
-            <span class="fullTitle">u ain't got</span> no type
-        </a>
+        <div id="navTitle">
+            <a class="brand" href="/"><span class="fullTitle">u ain't got</span> no type</a>
+            <i id="leaderboardIcon" class="bi bi-award-fill"></i>
+        </div>
         <i id="navMenu" class="bi bi-list"></i>
     </nav>
+    <section id="leaderboard">
+        <div id="leaderboardOverlay"></div>
+        <div id="leaderboardScreen">
+            <table id="leaderboardTable">
+            <thead>
+                <tr>
+                    <th>wpm</th>
+                    <th>user</th>
+                    <th>duration</th>
+                    <th>difficulty</th>
+                    <th>type</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for result in leaderboard_results %}
+                <tr class="leaderboardResult">
+                    <td>{{result.score}}</td>
+                    <td>{{result.user_id.username}}</td>
+                    <td>{{result.get_duration_display}}</td>
+                    <td>{{result.get_difficulty_display}}</td>
+                    <td>{{result.get_test_type_display}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </section>
     <section id="userPane" 
         {% if auth_type %} 
             style="left: 70%; width: 30%;" 

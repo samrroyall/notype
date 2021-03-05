@@ -32,6 +32,7 @@ def test(request):
             "default_duration": User.DEFAULT_DURATION,
             "test_types": User.TEST_TYPES,
         },
+        "leaderboard_results": Test.objects.all().order_by("-score"),
         "user": current_user,
         "word_list": (
             get_new_test( int(current_user.duration/60*500), current_user.difficulty )

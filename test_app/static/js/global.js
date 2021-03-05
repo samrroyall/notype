@@ -1,4 +1,7 @@
 function toggleUserPane() {
+    const leaderboardIsHidden = $("section#leaderboard").css("display") === "none";
+    if (!leaderboardIsHidden) return;
+
     const currWidth = $("section#userPane").css("width");
     if (currWidth === "0px") {
         // show user pane
@@ -21,7 +24,16 @@ function toggleUserPane() {
     }
 }
 
+function toggleLeaderboard() {
+    const isHidden = $("section#leaderboard").css("display") === "none";
+    if (isHidden) $("section#leaderboard").fadeIn(300);
+    else $("section#leaderboard").fadeOut(300);
+}
+
 $(document).ready( function() {
+    $("section#leaderboard").hide();
+    // when nav burger button is clicked, toggle user pane visibility
+    $("nav i#leaderboardIcon").click(toggleLeaderboard);
     // when nav burger button is clicked, toggle user pane visibility
     $("nav i#navMenu").click(toggleUserPane);
     // hide test results by default

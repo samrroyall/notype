@@ -28,16 +28,97 @@ nav {
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
     background-color: var(--light-color);
-    z-index: 1000;
+    z-index: 7000;
     font-size: calc(24px + 1vw);
 }
+nav div#navTitle { 
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 nav a.brand { color: var(--brand-color); }
-nav a.brand span.fullTitle { color: var(--dark-color); }
-nav i#navMenu { 
-    color: var(--brand-color); 
+nav a.brand span.fullTitle { 
+    display: inline-block;
+    margin-right: 6px;
+    color: var(--dark-color); 
+}
+nav i { 
+    display: inline-block; 
     cursor: pointer;
 }
-nav i#navMenu:hover { color: var(--dark-color); }
+nav i:hover { color: var(--dark-color); }
+nav i#leaderboardIcon { 
+    color: var(--dark-color);
+    margin-left: 30px;
+    font-size: calc(8px + 0.6vw);
+}
+nav i#leaderboardIcon:hover { color: var(--brand-color); }
+
+div#leaderboardOverlay {
+    position: fixed;
+    top: 6vh;
+    left: 0;
+    height: 94vh;
+    width: 100%;
+    background-color: black;
+    opacity: 0.8;
+    z-index: 5000;
+}
+div#leaderboardScreen {
+    position: fixed;
+    top: 18vh;
+    left: 0;
+    height: 64vh;
+    width: calc(80vw - 120px);
+    margin: 0 10vw;
+    border-radius: 10px;
+    padding: 30px;
+    background-color: var(--bg-color);
+    z-index: 6000;
+    overflow-y: scroll;
+}
+div#leaderboardScreen::-webkit-scrollbar {
+    border-radius: 0 10px 10px 0;
+}
+div#leaderboardScreen::-webkit-scrollbar-track {
+    border: 5px solid var(--bg-color);
+    border-radius: 10px;
+}
+div#leaderboardScreen::-webkit-scrollbar-thumb {
+    background-color: var(--keyPressLight-color);
+    border-radius: 10px;
+    border: 5px solid var(--bg-color);
+}
+
+table#leaderboardTable {
+    height: 100vh;
+}
+table#leaderboardTable tr {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+}
+
+table#leaderboardTable th,
+table#leaderboardTable td {
+    width: calc((80vw - 120px) / 5 - 40px);
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+table#leaderboardTable th {
+    color: var(--keyPressLight-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: calc(8px + 0.6vw);
+    font-weight: bold;
+}
+table#leaderboardTable td {
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: calc(6px + 0.6vw);
+}
 
 section#userPane {
     position: fixed;
@@ -68,6 +149,6 @@ section#userPane {
 }
 @media only screen and (max-width: 750px) {
     #noTest { display: block; }
-    nav i#navMenu, section#userPane, section#test, section#words, section#timerAndCounter,
-    section#keeb, section#results { display: none; }
+    section#userPane, section#test, section#words, section#timerAndCounter,
+    section#keeb, section#results, section#leaderboard, nav i  { display: none; }
 }

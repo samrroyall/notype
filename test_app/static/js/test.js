@@ -35,7 +35,7 @@ class NoTypeTest {
         const sorted_keys = Object.keys(this.stats_obj).map(k => parseInt(k)).sort((a,b) => a-b);
         const ordered_wpm = sorted_keys.map(k => this.stats_obj[k][2].toFixed(2));
         // default styling
-        Chart.defaults.global.defaultFontColor = colors.keyPressLight;
+        Chart.defaults.global.defaultFontColor = colors.keyPressDark;
         Chart.defaults.global.defaultFontSize = 14;
         Chart.defaults.global.defaultFontFamily = "'Roboto Mono', monospace";
         Chart.defaults.global.defaultFontStyle = "bold";
@@ -91,8 +91,12 @@ class NoTypeTest {
             },
         });
         // show test results
+        const total_chars = this.chars_correct + this.chars_incorrect;
         $("section#results h1#resultTitle").text(`You Scored ${this.final_score.toFixed(2)} WPM!`);
-        $("section#results").show();
+        $("section#results span#accuracyValue").text(`${(this.chars_correct*100/total_chars).toFixed(2)}%`);
+        $("section#results span#charsCorrectValue").text(`${this.chars_correct}/${total_chars}`);
+        $("section#results span#charsIncorrectValue").text(`${this.chars_incorrect}/${total_chars}`);
+        $("section#results").fadeIn(500);
     }
 
     storeResults() {

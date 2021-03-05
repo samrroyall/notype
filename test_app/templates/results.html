@@ -1,8 +1,24 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/results.css' %}">
-<!-- Chart.js code -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <section id="results">
     <h1 id="resultTitle"></h1>
-    <canvas id="testResultChart" width="100" height="100"></canvas>
+    <div id="resultChartContainer">
+        {% include 'chart.html' %}
+    </div>
+
+    <div id="resultFooter">
+        <div id="accuracy">
+            <span id="accuracyValue"></span><br/>
+            <span id="accuracyTitle">accuracy</span>
+        </div>
+        <div id="charsCorrect">
+            <span id="charsCorrectValue"></span><br/>
+            <span id="charsCorrectTitle">correct</span>
+        </div>
+        <div id="charsIncorrect">
+            <span id="charsIncorrectValue"></span><br/>
+            <span id="charsIncorrectTitle">incorrect</span>
+        </div>
+    </div>
+
 </section>

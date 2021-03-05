@@ -1,12 +1,48 @@
 section#results {
-    height: 60vh; 
+    height: 87vh; 
     width: 70%;
     margin: 6vh auto 0;
-    padding: 3vh 0 0;
+    padding: 6vh 0 0;
 }
 section#results h1#resultTitle { 
     color: var(--text-color); 
     font-family: 'Roboto Mono', monospace;
     text-align: center;
 }
+
+section#results div#resultChartContainer { 
+    height: 55vh; 
+}
 section#results canvas#testResultChart { margin: 20px auto 0; }
+
+section#results div#resultFooter {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+} 
+
+section#results div#accuracy,
+section#results div#charsCorrect,
+section#results div#charsIncorrect { 
+    margin: 15px 15px 0;
+    display: inline-block;
+    text-align: center; 
+}
+
+section#results span#accuracyValue,
+section#results span#charsCorrectValue,
+section#results span#charsIncorrectValue {
+    color: var(--keyPressLight-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: calc(20px + 1vw);
+}
+
+section#results span#accuracyTitle,
+section#results span#charsCorrectTitle,
+section#results span#charsIncorrectTitle {
+    color: var(--keyDark-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: calc(14px + 1vw);
+}

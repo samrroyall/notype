@@ -26,8 +26,13 @@ function toggleUserPane() {
 
 function toggleLeaderboard() {
     const isHidden = $("section#leaderboard").css("display") === "none";
-    if (isHidden) $("section#leaderboard").fadeIn(300);
-    else $("section#leaderboard").fadeOut(300);
+    if (isHidden) {
+        $("section#words div#startTestPrompt").hide();
+        $("section#leaderboard").fadeIn(300);
+    } else {
+        $("section#leaderboard").fadeOut(300);
+        $("section#words div#startTestPrompt").fadeIn(300);
+    }
 }
 
 $(document).ready( function() {

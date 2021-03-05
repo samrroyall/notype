@@ -109,7 +109,6 @@ class UserManager(models.Manager):
             errors["password"] = "Passwords do not match"
         return errors
 
-# Create your models here.
 class User(models.Model):
     email = models.CharField(max_length=255);
     username = models.CharField(max_length=255);

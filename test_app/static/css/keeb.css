@@ -18,7 +18,7 @@ main section#keeb div.keebKey {
     color: var(--text-color);
     height: 95%;
     margin: auto 2.5px;
-    border: 1px solid var(--dark-color);
+    border: 1px solid var(--text-color);
     border-radius: 5px;
     font-weight: bold;
 }

@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from login_app.models import User
+from test_app.models import Test
 from .wordlists import get_new_test
 
 def get_user(sessionData):
@@ -41,9 +42,9 @@ def test(request):
     return render(request, "index.html", context)
 
 def change_user_settings(request):
-    if request.method != "POST" or not request.is_ajax():
-        return redirect("/")
     current_user = get_user(request.session)
+    if not current_user or request.method != "POST" or not request.is_ajax():
+        return redirect("/")
     name = request.POST.get("name")
     value = request.POST.get("value")
     print(f"name: {name}, value: {value}")
@@ -72,3 +73,21 @@ def change_user_settings(request):
         return JsonResponse({"message": "Invalid form name or value"}, status=400)
     current_user.save()
     return JsonResponse({}, status=200)
+
+def upload_test_results(request):
+    current_user = get_user(request.session)
+    if request.method != "POST" or not request.is_ajax():
+        return redirect("/")
+    if not current_user:
+        return JsonResponse({
+            "message": f"Test not recorded because user is not authenticated."
+        }, status=200) 
+    new_test_result = Test.objects.create(
+        score = float(request.POST.get("score")),
+        difficulty = current_user.difficulty,
+        duration = current_user.duration,
+        test_type = current_user.test_type,
+        user_id = current_user
+    )
+    current_user.save()
+    return JsonResponse({"message": "Test data recorded."}, status=200)

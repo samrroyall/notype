@@ -69,5 +69,5 @@ section#userPane {
 @media only screen and (max-width: 750px) {
     #noTest { display: block; }
     nav i#navMenu, section#userPane, section#test, section#words, section#timerAndCounter,
-    form#layoutForm, form#modeForm { display: none; }
+    section#keeb, section#results { display: none; }
 }

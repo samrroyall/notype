@@ -1,0 +1,32 @@
+<section id="test">
+    {% csrf_token %}
+    <input type="hidden" value="not-started" id="testState">
+    <input type="hidden" 
+        {% if user %} 
+            value="{{user.duration}}" 
+        {% else %} 
+            value="{{preferences.default_duration}}" 
+        {% endif %} 
+        id="testLength"
+    >
+    <section id="words">
+        <div id="startTestPrompt"><span>Click here to start test...<br>Press TAB to restart!</span></div>
+        <div id="wordWrapper">
+        {% for word in word_list %}
+            <div class="word">
+            {% for letter in word %}
+            <div class="letter">{{letter}}</div>
+            {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+    <section id="timerAndCounter">
+        <section id="timer">
+            <span></span>
+        </section>
+        <section id="counter">
+            <span></span>
+        </section>
+    </section>
+</section>

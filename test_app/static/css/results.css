@@ -1,0 +1,12 @@
+section#results {
+    height: 60vh; 
+    width: 70%;
+    margin: 6vh auto 0;
+    padding: 3vh 0 0;
+}
+section#results h1#resultTitle { 
+    color: var(--text-color); 
+    font-family: 'Roboto Mono', monospace;
+    text-align: center;
+}
+section#results canvas#testResultChart { margin: 20px auto 0; }

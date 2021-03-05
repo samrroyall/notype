@@ -39,5 +39,6 @@ def register(request):
     return JsonResponse({}, status=200)
 
 def logout(request):
-    del request.session["userid"]
+    if "userid" in request.session:
+        del request.session["userid"]
     return redirect("/")

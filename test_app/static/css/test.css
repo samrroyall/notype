@@ -5,7 +5,7 @@ section#test {
     margin: 6vh auto 0;
     align-items: center;
     justify-content: center;
-    color: var(--text-color);
+    color: var(--brand-color);
 }
 
 section#words {
@@ -20,8 +20,8 @@ div#startTestPrompt {
     left: 14%;
     height: 50px;
     width: 72%;
-    padding: calc(20vh - 25px) 0;
-    font-size: calc(20px + 0.4vw);
+    padding: calc(19vh - 25px) 0 calc(21vh - 25px);
+    font-size: calc(16px + 0.4vw);
     text-align: center;
     z-index: 800;
 }
@@ -38,12 +38,12 @@ div#wordWrapper {
     overflow: hidden;
     opacity: 0.05;
     font-family: "Roboto Mono", monospace;
-    font-size: calc(28px + 0.7vw);
+    font-size: calc(16px + 1vw);
 }
 div#startTestPrompt:hover ~ div#wordWrapper { background-color: var(--text-color); }
 
 div#wordWrapper div.word {
-    height: calc(28px + 0.7vw);
+    height: calc(16px + 1vw);
     margin: 0 1% 1.5vh; 
     display: flex;
     flex-wrap: nowrap;
@@ -51,16 +51,16 @@ div#wordWrapper div.word {
     align-items: center;
 }
 div#wordWrapper div.letter {
-    height: calc(28px + 0.7vw);
+    height: calc(16px + 1vw);
     margin: auto;
     display: flex;
     align-items: center;
 }
-div.word.current { color: var(--keyPressDark-color); }
-div.letter.nextChar { border-left: 3px solid var(--brand-color); }
-div.letter.beforeNextChar { border-right: 3px solid var(--brand-color); }
+div.word.current { /*color: var(--keyPressDark-color);*/ }
+div.letter.nextChar { border-left: 3px solid var(--keyPressDark-color); }
+div.letter.beforeNextChar { border-right: 3px solid var(--keyPressDark-color); }
 div.letter.incorrect { color: var(--keyPressLight-color); }
-div.letter.correct { color: var(--light-color); }
+div.letter.correct { color: var(--keyDark-color); }
 
 section#timerAndCounter { width: 0; }
 section#timer,

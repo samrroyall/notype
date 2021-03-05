@@ -5,7 +5,7 @@ function toggleUserPane() {
         $("section#userPane").animate({
             "left": "70%", 
             "width": "30%",
-        }, 300);
+        }, 300)
         // fade active form and user page in
         $("div#loginPage form.active").fadeIn(280);
         $("div#userPage").fadeIn(280);
@@ -24,4 +24,6 @@ function toggleUserPane() {
 $(document).ready( function() {
     // when nav burger button is clicked, toggle user pane visibility
     $("nav i#navMenu").click(toggleUserPane);
+    // hide test results by default
+    $("section#results").hide();
 });

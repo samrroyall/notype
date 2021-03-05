@@ -1,0 +1,18 @@
+<section id="keeb">
+    <input type="hidden" 
+        {% if user %}
+            value="{{user.layout}}"
+        {% else %}
+            value="{{preferences.default_layout}}"
+        {% endif %}
+        id="currentLayout"
+    >
+    <input type="hidden" 
+        {% if user %}
+            value="{{user.mode}}"
+        {% else %}
+            value="{{preferences.default_mode}}"
+        {% endif %}
+        id="currentMode"
+    >
+</section>

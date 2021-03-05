@@ -1,5 +1,11 @@
 function changeUserSettings(e) {
     e.preventDefault();
+    // ensure that user is not currently taking a test
+    if ($("section#test input#testState").val() === "started") {
+        alert("You cannot alter your settings mid-test! Please reload and try again.");
+        return;
+    }
+    // grab setting data
     let name, value;
     if (e.currentTarget.tagName == "A") {
         const target = $(`div#userPage #${e.currentTarget.id}`).prevAll("input").first();

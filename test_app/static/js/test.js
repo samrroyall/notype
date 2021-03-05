@@ -284,7 +284,7 @@ class NoTypeTest {
         // remove incorrect from previous space div
         const prevSpaces = currWord.prevAll("div.space");
         if (prevSpaces.length === 0) throw "Error: NotTypeTest.prevWord: 'prevSpaces' has length 0";
-        prevSpaces.first().removeClass("currentSpace");
+        prevSpaces.first().addClass("currentSpace");
         prevSpaces.first().removeClass("incorrect");
         // since prevWord() is top of the stack, `prevWords` should not be empty
         const prevWords = currWord.prevAll("div.word");

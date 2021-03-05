@@ -28,34 +28,40 @@ div#startTestPrompt {
 
 div#wordWrapper {
     height: 28vh;
-    width: 94%;
+    width: 74%;
     margin: 6vh 3%;
+    padding: 0 10%; 
     border-radius: 5px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
     overflow: hidden;
     opacity: 0.05;
     font-family: "Roboto Mono", monospace;
-    font-size: calc(16px + 1vw);
+    font-size: calc(16px + 0.6vw);
 }
 div#startTestPrompt:hover ~ div#wordWrapper { background-color: var(--text-color); }
 
 div#wordWrapper div.word {
-    height: calc(16px + 1vw);
-    margin: 0 1% 1.5vh; 
+    height: calc(16px + 0.6vw);
+    margin: 0 0 1.5vh; 
     display: flex;
     flex-wrap: nowrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
 div#wordWrapper div.letter {
-    height: calc(16px + 1vw);
+    height: calc(16px + 0.6vw);
     margin: auto;
     display: flex;
     align-items: center;
 }
+div#wordWrapper div.space {
+    height: calc(16px + 0.6vw - 2px);
+    width: 1%;
+}
+div#wordWrapper div.space.incorrect { border-bottom: 2px solid var(--keyPressLight-color); }
 div.word.current { /*color: var(--keyPressDark-color);*/ }
 div.letter.nextChar { border-left: 3px solid var(--keyPressDark-color); }
 div.letter.beforeNextChar { border-right: 3px solid var(--keyPressDark-color); }

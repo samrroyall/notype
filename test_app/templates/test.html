@@ -12,12 +12,16 @@
     <section id="words">
         <div id="startTestPrompt"><span>Click here to start test...<br>Press TAB to restart!</span></div>
         <div id="wordWrapper">
-        {% for word in word_list %}
-            <div class="word">
-            {% for letter in word %}
-            <div class="letter">{{letter}}</div>
+        {% for line in word_list %}
+            {% for word in line %}
+                <div class="word">
+                    {% for letter in word %}
+                        <div class="letter">{{letter}}</div>
+                    {% endfor %}
+                </div>
+                <div class="space"></div>
             {% endfor %}
-            </div>
+            <br/>
         {% endfor %}
         </div>
     </section>

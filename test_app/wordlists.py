@@ -16,8 +16,6 @@ COMMON_LENGTH_DICT = {
 }
 
 def get_new_test(length, difficulty):
-    words = []
-
     # medium
     if difficulty == 2:
         max_word_length = 10
@@ -31,7 +29,11 @@ def get_new_test(length, difficulty):
     wordlists = [words for word_length, words in COMMON_LENGTH_DICT.items() if word_length <= max_word_length]
     wordlist = [item for sublist in wordlists for item in sublist]
 
-    for _ in range(length):
-        word = wordlist[random.randint(0, len(wordlist)-1)]
-        words.append(word)
-    return words
+    lines = []
+    for i in range(int(length/8)):
+        words = []
+        for _ in range(8):
+            word = wordlist[random.randint(0, len(wordlist)-1)]
+            words.append(word)
+        lines.append(words)
+    return lines

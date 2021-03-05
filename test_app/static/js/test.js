@@ -217,6 +217,9 @@ class NoTypeTest {
             nextLetters.first().addClass("nextChar");
         } else {
             nextChar.addClass("beforeNextChar");
+            const nextSpaces = nextChar.parent("div.word").nextAll("div.space");
+            if (nextSpaces.length === 0) throw "Error: NotTypeTest.nextLetter: 'nextSpaces' has length 0";
+            nextSpaces.first().addClass("currentSpace");
         }
     }
 
@@ -252,8 +255,16 @@ class NoTypeTest {
         // push undo function to stack
         this.undoStack.push(this.prevWord);
         // store current number of correct and incorrect chars
-        this.chars_correct += correct;
-        this.chars_incorrect += !correct;
+        // and handle potential incorrect spaces
+        let currentSpaces = $("#wordWrapper div.space.currentSpace");
+        if (currentSpaces.length === 0) throw "Error: NotTypeTest.nextWord: 'currentSpaces' has length 0";
+        if (correct) {
+            currentSpaces.first().removeClass("currentSpace");
+            this.chars_correct += 1;
+        } else {
+            currentSpaces.first().addClass("incorrect");
+            this.chars_incorrect += 1;
+        }
         // remove `beforeNextChar` class
         $("#wordWrapper div.letter.beforeNextChar").first().removeClass("beforeNextChar");
         // pass `current` class from current word to next word 
@@ -270,8 +281,13 @@ class NoTypeTest {
     // undoes the word of `nextWord`
     prevWord() {
         const currWord = $("#wordWrapper div.word.current").first();
-        const prevWords = currWord.prevAll("div.word");
+        // remove incorrect from previous space div
+        const prevSpaces = currWord.prevAll("div.space");
+        if (prevSpaces.length === 0) throw "Error: NotTypeTest.prevWord: 'prevSpaces' has length 0";
+        prevSpaces.first().removeClass("currentSpace");
+        prevSpaces.first().removeClass("incorrect");
         // since prevWord() is top of the stack, `prevWords` should not be empty
+        const prevWords = currWord.prevAll("div.word");
         if (prevWords.length === 0) throw "Error: NoTypeTest.prevWord: 'prevWords' has length 0";
         const prevWord = prevWords.first();
         // pass `current` class to previous word
@@ -321,37 +337,39 @@ class NoTypeTest {
     }
 }
 
+function setupTest() {
+    // hide test prompt
+    $("section#words div#startTestPrompt").hide();
+    // increase test opacity to 100% 
+    $("section#words div#wordWrapper").css("opacity", "1");
+    // ease-in timer and counter 
+    $("section#timerAndCounter").animate(
+        {"width": "15%"}, 500
+    );
+    $("section#test").css("justify-content", "space-evenly");
+    $("section#timerAndCounter section#counter").css("display", "flex");
+    $("section#timerAndCounter section#timer").css("display", "flex");
+
+    // instantiate new test with user test duration
+    let test = new NoTypeTest(
+        test_length = parseInt($("section#test input#testLength").val())
+    );
+
+    // handle user pane conflicting with test
+    const currWidth = $("section#userPane").css("width");
+    if (currWidth !== "0px") toggleUserPane();
+    // end any tests currently running if user pane is opened
+    $("nav i#navMenu").click((e) => (
+        ($("section#test input#testState").val() == "started")
+        ? test.endTest(false)
+        : null
+    ));
+
+    // open keyup listener, send all keystrokes to handler
+    $(document).keydown( (e) => test.keyHandler(e) );
+}
+
 $(document).ready( function() {
     // instantiate test object when test prompt is clicked
-    $("section#words").click( function () {
-        // hide test prompt
-        $("section#words div#startTestPrompt").hide();
-        // increase test opacity to 100% 
-        $("section#words div#wordWrapper").css("opacity", "1");
-        // ease-in timer and counter 
-        $("section#timerAndCounter").animate(
-            {"width": "15%"}, 500
-        );
-        $("section#test").css("justify-content", "space-evenly");
-        $("section#timerAndCounter section#counter").css("display", "flex");
-        $("section#timerAndCounter section#timer").css("display", "flex");
-
-        // instantiate new test with user test duration
-        let test = new NoTypeTest(
-            test_length = parseInt($("section#test input#testLength").val())
-        );
-
-        // handle user pane conflicting with test
-        const currWidth = $("section#userPane").css("width");
-        if (currWidth !== "0px") toggleUserPane();
-        // end any tests currently running if user pane is opened
-        $("nav i#navMenu").click((e) => (
-            ($("section#test input#testState").val() == "started")
-            ? test.endTest(false)
-            : null
-        ));
-
-        // open keyup listener, send all keystrokes to handler
-        $(document).keydown( (e) => test.keyHandler(e) );
-    });
+    $("section#words").click( setupTest );
 });

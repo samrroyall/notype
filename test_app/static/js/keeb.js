@@ -102,23 +102,30 @@ function unPressKey(e) {
     $(keyID).css("background-color", keyDark);
 }
 
-$(document).ready( function () {
-    // set keeb layout and color mode based on session vars
-    setLayout($("section#keeb input#currentLayout").val());
-    changeMode($("section#keeb input#currentMode").val());
+function startKeyTracking() {
     $(document).keydown( function (e) {
+        const userPaneOpen = $("section#userPane").css("width") !== "0px";
         try {
+            if (userPaneOpen) return;
             pressKey(e);
         } catch (err) {
             return;
         }
     });
     $(document).keyup( function (e) {
+        const userPaneOpen = $("section#userPane").css("width") !== "0px";
         try {
+            if (userPaneOpen) return;
             unPressKey(e);
         } catch (err) {
             return;
         }
     });
+}
 
+$(document).ready( function () {
+    // set keeb layout and color mode based on session vars
+    setLayout($("section#keeb input#currentLayout").val());
+    changeMode($("section#keeb input#currentMode").val());
+    startKeyTracking();
 });

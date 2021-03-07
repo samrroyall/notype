@@ -1,0 +1,44 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+<script src="{% static 'js/leaderboard.js' %}"></script>
+<section id="leaderboard">
+    <div id="leaderboardOverlay"></div>
+    <div id="leaderboardScreen">
+
+        <!-- Duration Buttons -->
+        <div id="durationButtons">
+            <button type="button" id="durationButton1" class="active">30</button> 
+            <button type="button" id="durationButton2" class="active">60</button> 
+            <button type="button" id="durationButton3" class="active">120</button>
+        </div>
+        <!-- Difficulty Buttons -->
+        <div id="difficultyButtons">
+            <button type="button" id="difficultyButton1" class="active">Easy</button>
+            <button type="button" id="difficultyButton2" class="active">Medium</button>
+            <button type="button" id="difficultyButton3" class="active">Hard</button>
+        </div>
+
+        <table id="leaderboardTable">
+        <thead>
+            <tr>
+                <th>wpm</th>
+                <th>user</th>
+                <th>duration</th>
+                <th>difficulty</th>
+                <th>type</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in leaderboard_results %}
+            <tr class="leaderboardResult">
+                <td>{{result.score}}</td>
+                <td>{{result.user_id.username}}</td>
+                <td>{{result.get_duration_display}}</td>
+                <td>{{result.get_difficulty_display}}</td>
+                <td>{{result.get_test_type_display}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</section>

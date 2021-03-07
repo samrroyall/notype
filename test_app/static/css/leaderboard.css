@@ -1,0 +1,25 @@
+div#leaderboardScreen button {
+    margin: 5px 0 0;
+    padding: 5px 10px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+div#leaderboardScreen button.active {
+    background-color: var(--keyPressLight-color);
+}
+
+div#leaderboardScreen button:not(.active) {
+    background-color: var(--keyLight-color);
+}
+
+div#durationButtons, div#difficultyButtons {
+    display: flex;
+}
+div#durationButtons button:first-of-type,
+div#difficultyButtons button:first-of-type {
+    border-radius: 5px 0 0 5px;
+}
+div#durationButtons button:last-of-type,
+div#difficultyButtons button:last-of-type {
+    border-radius: 0 5px 5px 0;
+}

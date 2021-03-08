@@ -12,6 +12,21 @@ def get_user(sessionData):
         raise Exception("error: test_app.views.get_user: more than one user matches supplied email.")
     return user_objs[0]
 
+def rank(results):
+    scored_results = []
+    prevScore = None
+    prevRank = None
+    currRank = 0 
+    for result in results:
+        currRank += 1
+        if prevScore is not None and result.score == prevScore:
+            scored_results.append( [prevRank, result] )
+            continue
+        scored_results.append( [currRank, result] )
+        prevRank = currRank
+        prevScore = result.score
+    return scored_results
+
 # ROUTES
 
 def index(request):
@@ -32,7 +47,7 @@ def test(request):
             "default_duration": User.DEFAULT_DURATION,
             "test_types": User.TEST_TYPES,
         },
-        "leaderboard_results": Test.objects.all().order_by("-score"),
+        "leaderboard_results": rank(Test.objects.all().order_by("-score")),
         "user": current_user,
         "word_list": (
             get_new_test( int(current_user.duration/60*500), current_user.difficulty )

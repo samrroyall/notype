@@ -7,7 +7,6 @@
         <span id="registrationPicker">Register</span>
     </div>
 
-
     <form id="loginForm" method="POST">
         {% include 'messages.html' with div_id="loginErrors" %}
 
@@ -20,10 +19,11 @@
             <span>Password</span>
             <input type="password" name="password" id="passwordInput">
         </label><br/>
-
+        <a href="#" id="passwordResetLink">I need to reset my password...</a><br/>
         <label for="submitInput">
             <input type="submit" id="submitInput" value="Login">
         </label>
+
     </form>
 
     <form id="registerForm" method="POST">
@@ -49,6 +49,19 @@
 
         <label for="submitInput2">
             <input type="submit" id="submitInput2" value="Register">
+        </label>
+    </form>
+
+    <form id="resetForm" method="POST">
+        {% include 'messages.html' with div_id="resetErrors" %}
+
+        {% csrf_token %}    
+        <label for="emailInput3">
+            <span>Email</span>
+            <input type="text" name="email" id="emailInput3">
+        </label><br/>
+        <label for="submitInput3">
+            <input type="submit" id="submitInput3" value="Reset">
         </label>
     </form>
 </div>

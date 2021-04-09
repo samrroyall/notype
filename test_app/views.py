@@ -2,7 +2,12 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from login_app.models import User
 from test_app.models import Test
+
 from .wordlists import get_new_test
+
+##############################
+########## HELPERS ###########
+##############################
 
 def get_user(sessionData):
     if "userid" not in sessionData:
@@ -27,7 +32,9 @@ def rank(results):
         prevScore = result.score
     return scored_results
 
-# ROUTES
+###############################
+########### ROUTES ############
+###############################
 
 def index(request):
     return redirect("/test");

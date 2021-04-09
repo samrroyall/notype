@@ -38,6 +38,15 @@ def register(request):
     request.session["userid"] = new_user.email 
     return JsonResponse({}, status=200)
 
+def reset(request):
+    # error handling
+    if request.method != "POST" or not request.is_ajax():
+        return redirect("/")
+    if User.objects.user_exists(request.POST.get("email")) is False:
+        return JsonResponse({"errors": ["Enter a valid email."]}, status=200)
+    # send a password reset email
+    return JsonResponse({"successMessage": "Check your inbox for a reset link!"}, status=200)
+
 def logout(request):
     if "userid" in request.session:
         del request.session["userid"]

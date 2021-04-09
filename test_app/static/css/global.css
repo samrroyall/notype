@@ -73,6 +73,12 @@ section#userPane {
     color: var(--mid-color);
 }
 
+footer {
+    width: 100vw;
+    text-align: center;
+    color: var(--text-color);
+}
+
 @media only screen and (min-width: 1024px) {
     #noTest { display: none; }
     #test { display: flex; }

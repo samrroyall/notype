@@ -51,12 +51,3 @@ main section#keeb div.keebKey div.main
     padding: 0;
     font-size: calc(12px + .6vh);
 }
-
-footer {
-    width: 90%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: flex-start;
-}
-
-footer form select { margin: 0 10px; }

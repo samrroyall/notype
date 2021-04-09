@@ -362,7 +362,7 @@ function setupTest() {
     $("nav i#navMenu").click((e) => (
         ($("section#test input#testState").val() == "started")
         ? test.endTest(false)
-        : null
+        : {}
     ));
 
     // open keyup listener, send all keystrokes to handler

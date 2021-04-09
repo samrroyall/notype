@@ -47,6 +47,19 @@ div#leaderboardScreen button {
 div#leaderboardScreen button.active { background-color: var(--keyPressLight-color); }
 div#leaderboardScreen button:not(.active) { background-color: var(--keyLight-color); }
 
+div#leaderboardHeader { 
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+div#leaderboardHeader i.bi { 
+    font-size: calc(10px + 1vw);
+    color: var(--keyPressLight-color);
+    cursor: pointer;
+}
+div#leaderboardHeader i.bi:hover { color: var(--keyPressDark-color); }
+
 div#durationButtons, div#difficultyButtons {
     display: flex;
 }

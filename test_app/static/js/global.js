@@ -24,14 +24,14 @@ function toggleUserPane() {
     }
 }
 
-function toggleLeaderboard() {
+function toggleLeaderboard(seconds = 300) {
     const isHidden = $("section#leaderboard").css("display") === "none";
     if (isHidden) {
         $("section#words div#startTestPrompt").hide();
-        $("section#leaderboard").fadeIn(300);
+        $("section#leaderboard").fadeIn(seconds);
     } else {
-        $("section#leaderboard").fadeOut(300);
-        $("section#words div#startTestPrompt").fadeIn(300);
+        $("section#leaderboard").fadeOut(seconds);
+        $("section#words div#startTestPrompt").fadeIn(seconds);
     }
 }
 
@@ -39,6 +39,8 @@ $(document).ready( function() {
     $("section#leaderboard").hide();
     // when nav burger button is clicked, toggle user pane visibility
     $("nav i#leaderboardIcon").click(toggleLeaderboard);
+    // when leaderboard 'X' button is clicked, toggle leaderboard
+    $("div#leaderboardHeader i.bi").click( () => toggleLeaderboard(0) );
     // when nav burger button is clicked, toggle user pane visibility
     $("nav i#navMenu").click(toggleUserPane);
     // hide test results by default

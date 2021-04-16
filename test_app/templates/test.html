@@ -9,6 +9,9 @@
         {% endif %} 
         id="testLength"
     >
+    <form id="restartForm" method="post" action="/restart">
+        {% csrf_token %}
+    </form>
     <section id="words">
         <div id="startTestPrompt"><span>Click here to start test...<br>Press TAB to restart!</span></div>
         <div id="wordWrapper">
@@ -18,8 +21,8 @@
                     {% for letter in word %}
                         <div class="letter">{{letter}}</div>
                     {% endfor %}
+                    <div class="space"></div>
                 </div>
-                <div class="space"></div>
             {% endfor %}
             <br/>
         {% endfor %}
@@ -34,3 +37,10 @@
         </section>
     </section>
 </section>
+<script>
+    $(document).ready(() => {
+        {% if tabRestart is True %}
+            setupTest();
+        {% endif %}
+    })
+</script>

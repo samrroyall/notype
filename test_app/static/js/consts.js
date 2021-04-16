@@ -65,7 +65,7 @@ const layoutObj = {
         [ ["Tab", 1.5], ["Q", 1], ["W", 1], ["E", 1], ["R", 1], ["T", 1], ["Y", 1], ["U", 1], ["I", 1], ["O", 1], ["P", 1], ["[ {", 1, "BracketLeft"], ["] }", 1, "BracketRight"], ["Back", 1.5, "Backspace"], ],
         [ ["Control", 1.75, "ControlLeft"], ["A", 1], ["S", 1], ["D", 1], ["F", 1], ["G", 1], ["H", 1], ["J", 1], ["K", 1], ["L", 1], ["; :", 1, "Semicolon"], ["' \"", 1, "Quote"], ["Enter", 2.25], ], 
         [ ["Shift", 2.25, "ShiftLeft"], ["Z", 1], ["X", 1], ["C", 1], ["V", 1], ["B", 1], ["N", 1], ["M", 1], [", <", 1, "Comma"], [". >", 1, "Period"], ["/ ?", 1, "Slash"], ["Shift", 1.75, "ShiftRight"], ["Fn", 1], ],
-        [ ["Alt", 1, "AltLeft"], ["Super", 1.25, "MetaLeft"], ["", 7, "Space"], ["Super", 1.25, "MetaRight"], ["Alt", 1, "AltRight"], ],
+        [ ["Super", 1, "MetaLeft"], ["Alt", 1.25, "AltLeft"], ["", 7, "Space"], ["Alt", 1.25, "AltRight"], ["Super", 1, "MetaRight"], ],
     ],
 };
 

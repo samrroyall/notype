@@ -59,9 +59,13 @@ div#wordWrapper div.letter {
 }
 div#wordWrapper div.space {
     height: calc(16px + 0.6vw - 2px);
-    width: 1%;
+    margin: 0 0.1rem;
+    width: 0.8rem;
 }
-div#wordWrapper div.space.incorrect { border-bottom: 2px solid var(--keyPressLight-color); }
+div#wordWrapper div.space.incorrect { 
+    /* border-bottom: 2px solid var(--keyPressLight-color); */
+    background-color: var(--keyPressLight-color);
+}
 div.word.current { /*color: var(--keyPressDark-color);*/ }
 div.letter.nextChar { border-left: 3px solid var(--keyPressDark-color); }
 div.letter.beforeNextChar { border-right: 3px solid var(--keyPressDark-color); }

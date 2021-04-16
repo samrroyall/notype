@@ -1,3 +1,35 @@
+function setupTest() {
+    // hide test prompt
+    $("section#words div#startTestPrompt").hide();
+    // increase test opacity to 100% 
+    $("section#words div#wordWrapper").css("opacity", "1");
+    // ease-in timer and counter 
+    $("section#timerAndCounter").animate(
+        {"width": "15%"}, 500
+    );
+    $("section#test").css("justify-content", "space-evenly");
+    $("section#timerAndCounter section#counter").css("display", "flex");
+    $("section#timerAndCounter section#timer").css("display", "flex");
+
+    // instantiate new test with user test duration
+    let test = new NoTypeTest(
+        test_length = parseInt($("section#test input#testLength").val())
+    );
+
+    // handle user pane conflicting with test
+    const currWidth = $("section#userPane").css("width");
+    if (currWidth !== "0px") toggleUserPane();
+    // end any tests currently running if user pane is opened
+    $("nav i#navMenu").click((e) => (
+        ($("section#test input#testState").val() == "started")
+        ? test.endTest(false)
+        : {}
+    ));
+
+    // open keyup listener, send all keystrokes to handler
+    $(document).keydown( (e) => test.keyHandler(e) );
+}
+
 class NoTypeTest { 
     constructor(test_length) { 
         this.started = false; // set test state to not started
@@ -5,6 +37,7 @@ class NoTypeTest {
         // initialize timer
         this.test_length = test_length;
         $("section#timer span").text(this.test_length);
+        this.timer;
 
         // itialize stats
         this.chars_correct = 0;
@@ -124,7 +157,9 @@ class NoTypeTest {
 
     endTest(finished = true) {
         if (!finished) { 
-            location.reload();
+            clearInterval(this.timer);
+            // reload page with tab
+            $("form#restartForm").submit();
             return;
         }
         if (Object.keys(this.stats_obj).length !== this.test_length) {
@@ -148,10 +183,10 @@ class NoTypeTest {
     startTimer() {
         const updatePage = (s) => $("section#timer span").text(s);
         let i = this.test_length;
-        let timer = setInterval( function () {
+        this.timer = setInterval( function () {
             i--;
             updatePage(i);
-            if (i === 0) clearInterval(timer);
+            if (i === 0) clearInterval(this.timer);
         }, 1000);
     }
 
@@ -217,7 +252,7 @@ class NoTypeTest {
             nextLetters.first().addClass("nextChar");
         } else {
             nextChar.addClass("beforeNextChar");
-            const nextSpaces = nextChar.parent("div.word").nextAll("div.space");
+            const nextSpaces = nextChar.nextAll("div.space");
             if (nextSpaces.length === 0) throw "Error: NotTypeTest.nextLetter: 'nextSpaces' has length 0";
             nextSpaces.first().addClass("currentSpace");
         }
@@ -258,8 +293,8 @@ class NoTypeTest {
         // and handle potential incorrect spaces
         let currentSpaces = $("#wordWrapper div.space.currentSpace");
         if (currentSpaces.length === 0) throw "Error: NotTypeTest.nextWord: 'currentSpaces' has length 0";
+        currentSpaces.first().removeClass("currentSpace");
         if (correct) {
-            currentSpaces.first().removeClass("currentSpace");
             this.chars_correct += 1;
         } else {
             currentSpaces.first().addClass("incorrect");
@@ -281,18 +316,17 @@ class NoTypeTest {
     // undoes the word of `nextWord`
     prevWord() {
         const currWord = $("#wordWrapper div.word.current").first();
-        // remove incorrect from previous space div
-        const prevSpaces = currWord.prevAll("div.space");
-        if (prevSpaces.length === 0) throw "Error: NotTypeTest.prevWord: 'prevSpaces' has length 0";
-        prevSpaces.first().addClass("currentSpace");
-        prevSpaces.first().removeClass("incorrect");
         // since prevWord() is top of the stack, `prevWords` should not be empty
-        const prevWords = currWord.prevAll("div.word");
-        if (prevWords.length === 0) throw "Error: NoTypeTest.prevWord: 'prevWords' has length 0";
-        const prevWord = prevWords.first();
+        const prevWord = currWord.prevAll("div.word").first();
         // pass `current` class to previous word
         currWord.removeClass("current");
+        prevWord.removeClass("complete");
         prevWord.addClass("current");
+        // remove (in)correct from previous space div
+        const prevSpace = prevWord.children("div.space").first();
+        prevSpace.first().addClass("currentSpace");
+        prevSpace.first().removeClass("incorrect");
+        prevSpace.first().removeClass("correct");
         // add `beforeNextChar` class to last letter in previous word
         const nextChars = $("#wordWrapper div.letter.nextChar");
         if (nextChars.length > 0) {
@@ -301,16 +335,29 @@ class NoTypeTest {
         prevWord.children("div.letter").last().addClass("beforeNextChar");
     }
 
+    preventKey(key) {
+        // check if key is alpha
+        if (key.length === 4 && key.substring(0,3) === "key") return true;
+        // check if key is digit
+        if (key.length === 6 && key.substring(0,5) === "digit") return true;
+        // check others
+        const others = ["space", "backspace", "tab"];
+        if (others.includes(key)) return true;
+        return false;
+    }
+
     keyHandler(e) {
-        e.preventDefault();
+        // get user keystroke
+        const key = e.code.toString().toLowerCase();
+        // allow certain keystrokes, prevent others
+        if (this.preventKey(key) === false) return;
         // start timer if not already started
         const test_state = $("section#test input#testState").val();
         if (test_state === "not-started") this.startTest();
-        // get user keystroke
-        const key = e.code.toString().toLowerCase();
         // check for tab to restart
         if (key === "tab") {
-            location.reload();
+            this.endTest(false);
+            setupTest();
             return;
         }
         // determine correct next character and set values
@@ -335,38 +382,6 @@ class NoTypeTest {
             this.nextLetter(nextChar, correct);
         }
     }
-}
-
-function setupTest() {
-    // hide test prompt
-    $("section#words div#startTestPrompt").hide();
-    // increase test opacity to 100% 
-    $("section#words div#wordWrapper").css("opacity", "1");
-    // ease-in timer and counter 
-    $("section#timerAndCounter").animate(
-        {"width": "15%"}, 500
-    );
-    $("section#test").css("justify-content", "space-evenly");
-    $("section#timerAndCounter section#counter").css("display", "flex");
-    $("section#timerAndCounter section#timer").css("display", "flex");
-
-    // instantiate new test with user test duration
-    let test = new NoTypeTest(
-        test_length = parseInt($("section#test input#testLength").val())
-    );
-
-    // handle user pane conflicting with test
-    const currWidth = $("section#userPane").css("width");
-    if (currWidth !== "0px") toggleUserPane();
-    // end any tests currently running if user pane is opened
-    $("nav i#navMenu").click((e) => (
-        ($("section#test input#testState").val() == "started")
-        ? test.endTest(false)
-        : {}
-    ));
-
-    // open keyup listener, send all keystrokes to handler
-    $(document).keydown( (e) => test.keyHandler(e) );
 }
 
 $(document).ready( function() {

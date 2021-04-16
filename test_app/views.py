@@ -61,8 +61,15 @@ def test(request):
             if current_user is not None 
             else get_new_test( int(User.DEFAULT_DURATION/60*500), User.DEFAULT_DIFFICULTY )
         ),
+        "tabRestart": request.session.get("tabRestart"),
     }
     return render(request, "index.html", context)
+
+def restart(request):
+    if request.method != "POST":
+        return redirect("/")
+    request.session["tabRestart"] = True
+    return redirect("/test")
 
 def change_user_settings(request):
     current_user = get_user(request.session)
@@ -113,4 +120,5 @@ def upload_test_results(request):
         user_id = current_user
     )
     current_user.save()
+    request.session["tabRestart"] = False # auto-restart test should be false after test complete
     return JsonResponse({"message": "Test data recorded."}, status=200)

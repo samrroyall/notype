@@ -38,14 +38,20 @@ div#wordWrapper {
     margin: 0 3%;
     padding: 0; 
     border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
     overflow: hidden;
     opacity: 0.05;
     font-family: "Roboto Mono", monospace;
     font-size: 1.75rem;
+}
+div#innerWordWrapper {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 div#startTestPrompt:hover ~ div#wordWrapper { background-color: var(--text-color); }
 

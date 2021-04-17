@@ -310,6 +310,11 @@ class NoTypeTest {
     nextWord(correct) {
         // push undo function to stack
         this.undoStack.push(this.prevWord);
+
+        // check current word position
+        const currentWord = $("#wordWrapper div.word.current").first();
+        const currentWordPos = Math.floor(currentWord.position().top);
+
         // store current number of correct and incorrect chars
         // and handle potential incorrect spaces
         let currentSpaces = $("#wordWrapper div.space.currentSpace");
@@ -325,18 +330,29 @@ class NoTypeTest {
         $("#wordWrapper div.letter.beforeNextChar").first().removeClass("beforeNextChar");
         // pass `current` class from current word to next word 
         // add `complete` class to previous word
-        const currentWord = $("#wordWrapper div.word.current").first();
         currentWord.removeClass("current");
         currentWord.addClass("complete");
         const nextWord = currentWord.nextAll("div.word").first();
         nextWord.addClass("current");
         // pass `nextChar` to first letter of next word
         nextWord.children("div.letter").first().addClass("nextChar");
+
+        // check current word position
+        const nextWordPos = Math.floor(nextWord.position().top);
+        const posDiff = nextWordPos-currentWordPos;
+        if (posDiff > 0) {
+            let oldPadding = $("div#innerWordWrapper").first().css("margin-top");
+            oldPadding = parseInt(oldPadding.substring(0, oldPadding.length-2));
+            $("div#innerWordWrapper").animate({"margin-top": `${oldPadding - posDiff}px`}, 300);
+        }
     }
 
     // undoes the word of `nextWord`
     prevWord() {
+        // check current word position
         const currWord = $("#wordWrapper div.word.current").first();
+        const currentWordPos = Math.floor(currWord.position().top);
+
         // since prevWord() is top of the stack, `prevWords` should not be empty
         const prevWord = currWord.prevAll("div.word").first();
         // pass `current` class to previous word
@@ -354,6 +370,15 @@ class NoTypeTest {
             nextChars.first().removeClass("nextChar");
         }
         prevWord.children("div.letter").last().addClass("beforeNextChar");
+
+        // check current word position
+        const prevWordPos = Math.floor(prevWord.position().top);
+        const posDiff = prevWordPos-currentWordPos;
+        if (posDiff < 0) {
+            let oldPadding = $("div#innerWordWrapper").first().css("margin-top");
+            oldPadding = parseInt(oldPadding.substring(0, oldPadding.length-2));
+            $("div#innerWordWrapper").animate({"margin-top": `${oldPadding - posDiff}px`}, 300);
+        }
     }
 
     preventKey(key) {

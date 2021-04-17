@@ -33,12 +33,11 @@ function setupTest() {
 class NoTypeTest { 
     constructor(test_length) { 
         this.started = false; // set test state to not started
-
+        this.token = $("section#test input[name='csrfmiddlewaretoken']").first().val(); // token for ajax requests
         // initialize timer
         this.test_length = test_length;
         $("section#timer span").text(this.test_length);
         this.timer;
-
         // itialize stats
         this.chars_correct = 0;
         this.chars_incorrect = 0;
@@ -46,10 +45,8 @@ class NoTypeTest {
             // second: [chars_correct, chars_incorrect, wpm]
         }
         this.final_score = undefined;
-
         // initialize stack for backspace
         this.undoStack = new Array();
-
         // set first word and character
         $("#wordWrapper div.word").first().addClass("current");
         $("#wordWrapper div.word.current div.letter").first().addClass("nextChar");
@@ -133,11 +130,10 @@ class NoTypeTest {
     }
 
     storeResults() {
-        const token = $("section#test input[name='csrfmiddlewaretoken']").first().val();
         $.ajax({
-            beforeSend: function(xhr, settings) {
+            beforeSend: (xhr, settings) => {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", token);
+                    xhr.setRequestHeader("X-CSRFToken", this.token);
                 }
             },
             method: "POST",
@@ -158,8 +154,20 @@ class NoTypeTest {
     endTest(finished = true) {
         if (!finished) { 
             clearInterval(this.timer);
-            // reload page with tab
-            $("form#restartForm").submit();
+            // set autoRestart on 
+            $.ajax({
+                beforeSend: (xhr, settings) => {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", this.token);
+                    }
+                },
+                method: "POST",
+                url: "/auto_restart",
+                data: {"value": "on"},
+                dataType: 'json',
+                success: () => location.reload(),
+            });
+            
             return;
         }
         if (Object.keys(this.stats_obj).length !== this.test_length) {
@@ -216,6 +224,19 @@ class NoTypeTest {
     }
 
     startTest() {
+        // set autoRestart off
+        $.ajax({
+            beforeSend: (xhr, settings) => {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", this.token);
+                }
+            },
+            method: "POST",
+            url: "/auto_restart",
+            data: {"value": "off"},
+            dataType: 'json',
+        });
+
         $("section#test input#testState").val("started");
         $("section#test input#testState").change( (e) => this.endTest() );
         this.startTimer();
@@ -357,7 +378,6 @@ class NoTypeTest {
         // check for tab to restart
         if (key === "tab") {
             this.endTest(false);
-            setupTest();
             return;
         }
         // determine correct next character and set values

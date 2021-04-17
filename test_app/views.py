@@ -66,15 +66,15 @@ def test(request):
     return render(request, "index.html", context)
 
 def restart(request):
-    if request.method != "POST":
-        return redirect("/")
-    request.session["tabRestart"] = True
-    return redirect("/test")
+    if request.method != "POST" or not request.is_ajax():
+        return JsonResponse({}, status=400)
+    request.session["tabRestart"] = True if request.POST.get("value") == "on" else False
+    return JsonResponse({}, status=200);
 
 def change_user_settings(request):
     current_user = get_user(request.session)
     if not current_user or request.method != "POST" or not request.is_ajax():
-        return redirect("/")
+        return JsonResponse({}, status=400)
     name = request.POST.get("name")
     value = request.POST.get("value")
     print(f"name: {name}, value: {value}")
@@ -107,7 +107,7 @@ def change_user_settings(request):
 def upload_test_results(request):
     current_user = get_user(request.session)
     if request.method != "POST" or not request.is_ajax():
-        return redirect("/")
+        return JsonResponse({}, status=400)
     if not current_user:
         return JsonResponse({
             "message": f"Test not recorded because user is not authenticated."
